@@ -6,25 +6,23 @@ import java.util.Date;
 import java.util.Scanner;
 
 import modelo.entidade.Reservas;
+import modelo.execao.ExecaoDeDominio;
 
 public class Programa {
 
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) {
 		
-		Scanner sc = new Scanner(System.in);
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		
-		System.out.print("Numero Quarto");
-		int numero = sc.nextInt();
-		System.out.print("Data de Entrada (dd/mm/aaaa): ");
-		Date checkIn = sdf.parse(sc.next());
-		System.out.print("Data de Saída (dd/mm/aaaa): ");
-		Date checkOut = sdf.parse(sc.next());
-		
-		if (!checkOut.after(checkIn)) {
-			System.out.println("Erro na reserva: A data de Saída deve ser maior que a data de Entrada!");
-		}
-		else {
+			Scanner sc = new Scanner(System.in);
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		try {
+			System.out.print("Numero Quarto");
+			int numero = sc.nextInt();
+			System.out.print("Data de Entrada (dd/mm/aaaa): ");
+			Date checkIn = sdf.parse(sc.next());
+			System.out.print("Data de Saída (dd/mm/aaaa): ");
+			Date checkOut = sdf.parse(sc.next());
+			
 			Reservas reserva = new Reservas(numero, checkIn, checkOut);
 			System.out.println("Reserva: "+ reserva);
 			
@@ -35,15 +33,18 @@ public class Programa {
 			System.out.print("Data de Saída (dd/mm/aaaa): ");
 			checkOut = sdf.parse(sc.next());
 			
-			String erro = reserva.atualizacaoDatas(checkIn, checkOut);
-			if (erro !=null) {
-				System.out.println(erro);
-			}
-			else {
-				System.out.println("Reserva: "+ reserva);
-			}
+			reserva.atualizacaoDatas(checkIn, checkOut);
+			System.out.println("Reserva: "+ reserva);
 		}
-		
+		catch (ParseException e) {
+			System.out.println("Formato de data incorrto");
+		}
+		catch (ExecaoDeDominio e) {
+			System.out.println(e.getMessage());
+		}
+		catch (RuntimeException e) {
+			System.out.println("Erro Inesperado");
+		}
 		sc.close();
 	}
 
